@@ -1,21 +1,52 @@
-let canapData = [];
+const host = "http://localhost:3000/";
+const hostProduct = host + "api/products/"
 
-const fetchCanap = async ()=> {
-    await fetch("http://localhost:3000/api/products/")
-    .then((res) => res.json())
-    .then((promise)=> {
-        canapData = promise
-        console.log(canapData);
-    });
+
+const articleSection = document.getElementById("items")
+
+const addItem = (item) => {
+  let productLink = document.createElement(`a`)
+  productLink.href = `./product.html?id=${item._id}`
+  productLink.innerHTML = `
+  <article>
+  <img
+  src="${item.imageUrl}"
+  alt="${item.altTxt}"
+  />
+  <h3 class="productName">${item.name}</h3>
+  <p class="productDescription">
+  ${item.description}
+  </p>
+  </article>
+  `;
+  // console.log("Notre Nom :",productLink);
+  return productLink;
 };
 
-const canapDisplay = async () => {
-    await fetchCanap();
+// Tableau permettant de récuperer les articles
+let articleArray = [];
 
-    // document.getElementById("items").innerHTML = `<div><img class="image-items"
-    //  src="${canapData[0].imageUrl}" alt="Image d'un canapé" </div>
-    
-    // `;
-};
+// Construction de fetch pour récuperer les articles
+fetchFunction(hostProduct).then((result)=> {
+    // json = format 
+    articleArray = result;
+        // on vient Maper le tableau (crée un nouveau tableau avec les résultats 
+        // de l'appel d'une fonction fournie sur chaque élément du tableau appelant. )
+        articleArray.map((cards)=>{
+            let myName = addItem(cards);
+            console.log("Mon article :",cards)
+            // ajout de myName dans articleSection qui est = à l'iditem
+            articleSection.appendChild(myName)
+        });
+});
+        // }).catch((err)=>{console.log("Récupération des informations impossible.")}) ;
 
-canapDisplay();
+
+// Appel de fetch 
+
+
+
+
+//  Try Catch ???
+
+

@@ -7,8 +7,7 @@ const id = url.searchParams.get("id");
 const host = "http://localhost:3000/";
 const objectURL = host + "api/products/" + id;
 
-fetchFunction(objectURL)
-.then((result) => {
+fetchFunction(objectURL).then((result) => {
   const productTitle = (document.getElementById("title").innerHTML =
     result.name);
 
@@ -37,6 +36,7 @@ fetchFunction(objectURL)
 // Ajout au panier
 
 // Fonction de récupération de la quantité
+
 const getQuantity = () => {
   let quantity = document.getElementById("quantity");
   return quantity.value;
@@ -46,21 +46,66 @@ const getColors = () => {
   let colors = document.getElementById("colors");
   return colors.value;
 };
+// Gestion de l'érreur quantités couleurs
+const checkError = (error, context) => {
+  if (context === "cart") {
+    const goToCartBtn = document.getElementById("goToCart"),
+      goToCartCtn = document.getElementById("hidden"),
+      inputClrs = document.getElementById("colors"),
+      clrsMessageError = document.getElementById("colorErrorMessage"),
+      inputQty = document.getElementById("quantity"),
+      toCartBtn = document.getElementById("addToCart"),
+      qtyMessageError = document.getElementById("quantityErrorMessage");
 
+    if (!error.color && !error.quantity) {
+      goToCartCtn.style.display = "flex";
+      inputQty.value = "0";
+      inputClrs.value = "";
+      console.log(goToCartCtn, "goToCartCtn");
+      goToCartBtn.style.backgroundColor = "green";
+      goToCartBtn.addEventListener("click", () => {
+        window.location.href = "./cart.html";
+      });
+    }
+    if (error.color || error.quantity) {
+      goToCartCtn.style.display = "none";
+    }
+    if (error.color) {
+      clrsMessageError.style.display = "flex";
+      inputClrs.style.borderBlockColor = "red";
+    } else {
+      // Si pas d'érreur de couleur
+      clrsMessageError.style.display = "none";
+      inputClrs.style.borderBlockColor = "Grey";
+    }
+    if (error.quantity) {
+      qtyMessageError.style.display = "flex";
+      inputQty.style.borderBlockColor = "red";
+    } else {
+      qtyMessageError.style.display = "none";
+      inputQty.style.borderBlockColor = "Grey";
+    }
+    console.log("traitement erreur cart");
+  }
+  if (context === "panier") {
+    console.log("traitement erreur panier");
+  }
+  if (error.quantityMax) {
+  }
+};
 // récupération du Button  + ajout d'évenement
 const toCartBtn = document.getElementById("addToCart");
-const goToCartBtn = document.getElementById("goToCart");
-goToCartBtn.style.display = "none";
+
 toCartBtn.addEventListener("click", () => {
   // récupération des quantités et couleurs
   let qty = parseInt(getQuantity());
   let clrs = getColors();
 
-  add2Cart(id, clrs, qty);
-  goToCartBtn.style.display = "block";
+  let returnAdd2Cart = add2Cart(id, clrs, qty);
+  console.log(returnAdd2Cart, "Error returnAdd2Cart");
+  checkError(returnAdd2Cart, "cart");
+  checkError(returnAdd2Cart, "panier");
+  // goToCartBtn.style.bor = "green";
 });
 
 // envois vers le panier au click :
-goToCartBtn.addEventListener("click", () => {
-  window.location.href = "./cart.html";
-});

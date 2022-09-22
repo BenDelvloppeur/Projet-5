@@ -9,12 +9,42 @@ const getCart = () => {
 };
 
 //   Fonction logique avec plusieurs conditions.
+
+// const refreshPage = () => {
+//   window.location.reload(false);
+// };
 const add2Cart = (id, clrs, qty) => {
-  if (qty <= 0 || qty > 100 || clrs == "") {
-    return alert(
-      "Veuillez remplir les conditions de couleur et de quantité correctement"
-    );
+  let error = {};
+
+  if (qty <= 0 || qty > 100) {
+    error.quantity = true;
   }
+
+  if (clrs === "") {
+    error.color = true;
+  }
+
+  if (qty >= 1 && qty <= 100) {
+    error.quantity = false;
+  }
+
+  if (clrs !== "") {
+    error.color = false;
+  }
+
+  if (qty >= 1 && qty <= 100 && clrs !== "") {
+    error = {
+      color: false,
+      quantity: false,
+    };
+  }
+  // if (clrs === ""){
+  //   const inputErrClrs = document.getElementById("colors")
+  //   const errClrs = document.getElementById("itemColors")
+  //   errClrs.style.color = "red"
+  //   inputErrClrs.style.borderBlockColor = "red"
+  //   return
+
   let items = getCart();
   if (items.length == 0) {
     items = [[id, clrs, qty]];
@@ -23,7 +53,12 @@ const add2Cart = (id, clrs, qty) => {
     for (let i = 0; i < items.length; i++) {
       if (id === items[i][0] && clrs === items[i][1]) {
         found = true;
-        items[i][2] += qty;
+        if (items[i][2] + qty > 100) {
+          error.quantity = true;
+          error.quantityMax = true;
+        } else {
+          items[i][2] += qty;
+        }
       }
     }
     if (found == false) {
@@ -33,11 +68,9 @@ const add2Cart = (id, clrs, qty) => {
   }
   // Modification des objects en string (chaine de caractère)
   localStorage.setItem("panier", JSON.stringify(items));
+  console.log(error, "Error add2Cart");
+  return error;
 };
-
-if(localStorage.getItem("panier") != null){
-  
-}
 
 const deleteItems = (id, clrs) => {
   let items = getCart();
@@ -47,6 +80,9 @@ const deleteItems = (id, clrs) => {
       items.splice(i, 1);
       localStorage.setItem("panier", JSON.stringify(items));
       window.location.reload();
+    }
+    if (items.length === 0) {
+      localStorage.clear();
     }
   }
 };

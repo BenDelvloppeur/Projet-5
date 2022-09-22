@@ -25,19 +25,20 @@ const addItem = (item) => {
 
 // Tableau permettant de récuperer les articles
 let articleArray = [];
+const title = document.getElementsByClassName("titles")
 
 // Construction de fetch pour récuperer les articles
 fetchFunction(hostProduct).then((result)=> {
-    // json = format 
-    articleArray = result;
-        // on vient Maper le tableau (crée un nouveau tableau avec les résultats 
-        // de l'appel d'une fonction fournie sur chaque élément du tableau appelant. )
-        articleArray.map((cards)=>{
-            let myName = addItem(cards);
-            console.log("Mon article :",cards)
-            // ajout de myName dans articleSection qui est = à l'iditem
-            articleSection.appendChild(myName)
-        });
+    // json = format
+      articleArray = result;
+          // on vient Maper le tableau (crée un nouveau tableau avec les résultats 
+          // de l'appel d'une fonction fournie sur chaque élément du tableau appelant. )
+          articleArray.map((cards)=>{
+              let myName = addItem(cards);
+              console.log("Mon article :",cards)
+              // ajout de myName dans articleSection qui est = à l'iditem
+              articleSection.appendChild(myName)
+            });
 });
         // }).catch((err)=>{console.log("Récupération des informations impossible.")}) ;
 

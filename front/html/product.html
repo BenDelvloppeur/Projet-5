@@ -63,24 +63,26 @@
 
               <div class="item__content__settings">
                 <div class="item__content__settings__color">
-                  <label for="color-select">Choisir une couleur :</label>
+                  <label for="color-select" id="itemColors">Choisir une couleur :</label>
                   <select name="color-select" id="colors">
                       <option value="">--SVP, choisissez une couleur --</option>
 <!--                       <option value="vert">vert</option>
                       <option value="blanc">blanc</option> -->
                   </select>
+                  <p class="colorMessage" id="colorErrorMessage">Veuillez choisir une couleur valide</p>
                 </div>
 
                 <div class="item__content__settings__quantity">
-                  <label for="itemQuantity">Nombre d'article(s) (1-100) :</label>
+                  <label for="itemQuantity" id="itemQuantity">Nombre d'article(s) (1-100) :</label>
                   <input type="number" name="itemQuantity" min="1" max="100" value="0" id="quantity">
+                  <p class="colorMessage" id="quantityErrorMessage">Veuillez choisir une quantité valide</p>
                 </div>
               </div>
 
               <div class="item__content__addButton">
                 <button id="addToCart">Ajouter au panier</button>
               </div>
-              <div class="item__content__addButton">
+              <div class="item__content__addButton" id="hidden" >
                 <button id="goToCart">Aller au panier</button>
             </div>
           </article>

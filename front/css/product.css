@@ -73,6 +73,10 @@
 .item__content__settings__quantity input:focus {
 	outline: none;
 }
+.colorMessage{
+	color: red;
+	display: none;
+}
 .item__content__addButton {
 	display: flex;
 	justify-content: center;

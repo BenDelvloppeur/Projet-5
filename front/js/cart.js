@@ -10,9 +10,6 @@ const getCart = () => {
 
 //   Fonction logique avec plusieurs conditions.
 
-// const refreshPage = () => {
-//   window.location.reload(false);
-// };
 const add2Cart = (id, clrs, qty) => {
   let error = {};
 
@@ -38,37 +35,33 @@ const add2Cart = (id, clrs, qty) => {
       quantity: false,
     };
   }
-  // if (clrs === ""){
-  //   const inputErrClrs = document.getElementById("colors")
-  //   const errClrs = document.getElementById("itemColors")
-  //   errClrs.style.color = "red"
-  //   inputErrClrs.style.borderBlockColor = "red"
-  //   return
 
-  let items = getCart();
-  if (items.length == 0) {
-    items = [[id, clrs, qty]];
-  } else {
-    let found = false;
-    for (let i = 0; i < items.length; i++) {
-      if (id === items[i][0] && clrs === items[i][1]) {
-        found = true;
-        if (items[i][2] + qty > 100) {
-          error.quantity = true;
-          error.quantityMax = true;
-        } else {
-          items[i][2] += qty;
+  if (!error.color && !error.quantity && !error.quantityMax) {
+    let items = getCart();
+    if (items.length == 0) {
+      items = [[id, clrs, qty]];
+    } else {
+      let found = false;
+      for (let i = 0; i < items.length; i++) {
+        if (id === items[i][0] && clrs === items[i][1]) {
+          found = true;
+          if (items[i][2] + qty > 100) {
+            error.quantity = true;
+            error.quantityMax = true;
+          } else {
+            items[i][2] += qty;
+          }
         }
       }
+      if (found == false) {
+        let item = [id, clrs, qty];
+        items.push(item);
+      }
     }
-    if (found == false) {
-      let item = [id, clrs, qty];
-      items.push(item);
-    }
+    // Modification des objects en string (chaine de caractère)
+    localStorage.setItem("panier", JSON.stringify(items));
+    console.log(error, "Error add2Cart");
   }
-  // Modification des objects en string (chaine de caractère)
-  localStorage.setItem("panier", JSON.stringify(items));
-  console.log(error, "Error add2Cart");
   return error;
 };
 
@@ -160,16 +153,16 @@ const makeJsonData = () => {
     email: email.value,
   };
   let items = getCart();
-  let product = [];
+  let products = [];
 
   for (i = 0; i < items.length; i++) {
-    if (product.find((e) => e == items[i][0])) {
+    if (products.find((e) => e == items[i][0])) {
       console.log("not found");
     } else {
-      product.push(items[i][0]);
+      products.push(items[i][0]);
     }
   }
 
-  let jsonData = JSON.stringify({ contact, product });
+  let jsonData = JSON.stringify({ contact, products });
   return jsonData;
 };

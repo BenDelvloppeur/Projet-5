@@ -1,12 +1,11 @@
 const host = "http://localhost:3000/";
-const hostProduct = host + "api/products/"
+const hostProduct = host + "api/products/";
 
-
-const articleSection = document.getElementById("items")
+const articleSection = document.getElementById("items");
 
 const addItem = (item) => {
-  let productLink = document.createElement(`a`)
-  productLink.href = `./product.html?id=${item._id}`
+  let productLink = document.createElement(`a`);
+  productLink.href = `./product.html?id=${item._id}`;
   productLink.innerHTML = `
   <article>
   <img
@@ -25,29 +24,22 @@ const addItem = (item) => {
 
 // Tableau permettant de récuperer les articles
 let articleArray = [];
-const title = document.getElementsByClassName("titles")
+const title = document.getElementsByClassName("titles");
 
-// Construction de fetch pour récuperer les articles
-fetchFunction(hostProduct).then((result)=> {
-    // json = format
-      articleArray = result;
-          // on vient Maper le tableau (crée un nouveau tableau avec les résultats 
-          // de l'appel d'une fonction fournie sur chaque élément du tableau appelant. )
-          articleArray.map((cards)=>{
-              let myName = addItem(cards);
-              console.log("Mon article :",cards)
-              // ajout de myName dans articleSection qui est = à l'iditem
-              articleSection.appendChild(myName)
-            });
+// Appel de la fonction fetch
+fetchFunction(hostProduct).then((result) => {
+  // json = format
+  articleArray = result;
+  // on vient Maper le tableau (crée un nouveau tableau avec les résultats
+  articleArray.map((cards) => {
+    let myName = addItem(cards);
+    console.log("Mon article :", cards);
+    // ajout de myName dans articleSection qui est = à l'additem
+    articleSection.appendChild(myName);
+  });
 });
-        // }).catch((err)=>{console.log("Récupération des informations impossible.")}) ;
+// }).catch((err)=>{console.log("Récupération des informations impossible.")}) ;
 
-
-// Appel de fetch 
-
-
-
+// Appel de fetch
 
 //  Try Catch ???
-
-

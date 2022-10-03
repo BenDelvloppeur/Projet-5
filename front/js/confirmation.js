@@ -1,5 +1,5 @@
 const str = window.location;
-const url = new URL(str);
-const id = url.searchParams.get("id");
-const orderId = document.getElementById("orderId");
-orderId.innerHTML = id;
+(url = new URL(str)),
+  (id = url.searchParams.get("id")),
+  (orderId = document.getElementById("orderId")),
+  (orderId.innerHTML = id);

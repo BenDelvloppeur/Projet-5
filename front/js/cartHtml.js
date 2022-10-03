@@ -18,41 +18,67 @@ const fetchIdData = () => {
       fetch(url)
         .then((response) => response.json())
         .then((result) => {
-          cartSection.innerHTML += `<article class="cart__item" data-id="${id}" data-color="${color}">
-                <div class="cart__item__img">
-                  <img src="${result.imageUrl}" alt="${result.altTxt}">
-                </div>
-                <div class="cart__item__content">
-                  <div class="cart__item__content__titlePrice">
-                    <h2>${result.name}</h2>
-                    <p>${color}</p>
-                    <p>${result.price} €</p>
-                  </div>
-                  <div class="cart__item__content__settings">
-                    <div class="cart__item__content__settings__quantity">
-                      <p>Qté : </p>
-                      <input type="number" class="itemQuantity" name="itemQuantity" onchange="changeQty('${id}', '${color}', this.value)" min="1" max="100" value="${items[i][2]}">
-                    </div>
-                    <div class="cart__item__content__settings__delete">
-                      <p class="deleteItems" onclick="deleteItems('${id}','${color}')">Supprimer</p>
-                    </div>
-                  </div>
-                </div>
-              </article>`;
+          cartSection.innerHTML += `<p id="messageError"></p><p id="messageError2"></p><article class="cart__item" data-id="${id}" data-color="${color}">
+        <div class="cart__item__img">
+        <img src="${result.imageUrl}" alt="${result.altTxt}">
+        </div>
+        <div class="cart__item__content">
+        <div class="cart__item__content__titlePrice">
+        <h2>${result.name}</h2>
+        <p>${color}</p>
+        <p>${result.price} €</p>
+        </div>
+        <div class="cart__item__content__settings">
+        <div class="cart__item__content__settings__quantity">
+        <p>Qté : </p>
+        <input type="number" class="itemQuantity" name="itemQuantity" onchange="changeQty('${id}', '${color}', this.value)" min="1" max="100" value="${items[i][2]}">
+        </div>
+        
+        <div class="cart__item__content__settings__delete">
+        <p class="deleteItems" onclick="deleteItems('${id}','${color}')">Supprimer</p>
+        </div>
+        </div>
+        </div>
+        </article>`;
 
           // prix total (si qté (items[i][2]))
+          if (items[i][2] >= 100) {
+            let messageError = document.getElementById("messageError");
+            messageError.innerHTML =
+              "La quantité maximum par produit est de 100.";
+            messageError.style.color = "orange";
+            messageError.style.marginTop = "1%";
+            messageError.style.marginBottom = "1.5%";
+            messageError.style.textAlign = "center";
+          }
+          if (items[i][2] <= 1) {
+            let messageError = document.getElementById("messageError2");
+            messageError.innerHTML =
+              "La quantité minimum par produit est de 1.";
+            messageError.style.color = "orange";
+            messageError.style.marginTop = "1%";
+            messageError.style.marginBottom = "1.5%";
+            messageError.style.textAlign = "center";
+          }
           price += result.price * items[i][2];
           document.getElementById("totalPrice").innerHTML = price;
         });
 
       // Quantité total :
-      if(items[i][2]<= 100){
-
+      if (items[i][2] <= 100) {
         qty += parseInt(items[i][2]);
         document.getElementById("totalQuantity").innerHTML = qty;
-      }else{
+      } else {
         items[i][2] = 100;
         qty += parseInt(items[i][2]);
+        document.getElementById("totalQuantity").innerHTML = qty;
+      }
+      if (items[i][2] >= 1) {
+        // qty += parseInt(items[i][2]);
+        document.getElementById("totalQuantity").innerHTML = qty;
+      } else {
+        items[i][2] = 1;
+        qty = parseInt(items[i][2]);
         document.getElementById("totalQuantity").innerHTML = qty;
       }
     }
@@ -103,12 +129,16 @@ orderButton.addEventListener("click", (e) => {
   })
     .then((res) => res.json())
     // to check res.ok status in the network
-    .then((data) => {
+    .then((result) => {
       localStorage.clear();
-      let confirmationUrl = "./confirmation.html?id=" + data.orderId;
+      let confirmationUrl = "./confirmation.html?id=" + result.orderId;
+      console.log(result);
       window.location.href = confirmationUrl;
     })
     .catch(() => {
-      alert("Une erreur est survenue, merci de revenir plus tard.");
+      // Modifier
+      let errorMsg = document.getElementById("main");
+      errorMsg.innerHTML = `<h1>Commande impossible<br> Merci de bien vouloir réssayer ultérieurement.</h1>`;
+      // alert("Une erreur est survenue, merci de revenir plus tard.");
     }); // catching errors
 });
